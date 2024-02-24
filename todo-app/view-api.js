@@ -6,10 +6,10 @@ let nameStore = sessionStorage.getItem('name-storage');
 if (nameStore == null) { nameStore = 'loc' };
 let btnStore = document.getElementById("btn-store");
 if (nameStore == 'loc') {
-  btnStore.textContent = 'Перейти на серверное хранилище';
+  btnStore.textContent = 'Switch to server storage';
 }
 else {
-  btnStore.textContent = 'Перейти на локальное хранилище';
+  btnStore.textContent = ' Switch to local storage';
 };
 
 btnStore.addEventListener('click', function () {
@@ -17,22 +17,22 @@ btnStore.addEventListener('click', function () {
   else { nameStore = 'loc' };
   sessionStorage.setItem('name-storage', nameStore);
   if (nameStore == 'loc') {
-    btnStore.textContent = 'Перейти на серверное хранилище';
+    btnStore.textContent = 'Switch to server storage';
   }
   else {
-    btnStore.textContent = 'Перейти на локальное хранилище';
+    btnStore.textContent = 'Switch to local storage';
   };
   location.reload();
 });
 
-// создаем и возвращаем заголовок приложения
+// create and return the app title
 function createAppTitle(title) {
   let appTitle = document.createElement('h2');
   appTitle.innerHTML = title;
   return appTitle;
 }
 
-// создаем и возвращаем форму для создания дела
+// create and return form
 function createTodoItemForm() {
   let form = document.createElement('form');
   let input = document.createElement('input');
@@ -41,11 +41,11 @@ function createTodoItemForm() {
 
   form.classList.add('input-group', 'mb-3');
   input.classList.add('form-control');
-  input.placeholder = 'Введите название нового дела';
+  input.placeholder = 'Input the to-do list name';
   buttonWrapper.classList.add('input-group-append');
   button.classList.add('btn', 'btn-primary');
-  button.disabled = true;   // сначала до ввода данных кнопка неактивна
-  button.textContent = 'Добавить дело';
+  button.disabled = true;   // before input the button is disabled
+  button.textContent = 'Add to-do list';
 
   buttonWrapper.append(button);
   form.append(input);
@@ -55,24 +55,24 @@ function createTodoItemForm() {
 
 }
 
-// создаем и возвращаем список элементов
+// create and return to-do list
 function createTodoList() {
   let list = document.createElement('ul');
   list.classList.add('list-group');
   return list;
 }
 
-// создание элемента li, параметры: имя дела, выполнено-не выполнено, уникальный
-// идентификатор в массиве дел и id элемента li
+// create li, parameters: to-do name, done, index in to-do array,
+//  id of li
 function createTodoItem(name, done, idItem) {
   let item = document.createElement('li');
-  // кнопки помещаем в элемент, который красиво покажет их в одной группе
+  // 
   let buttonGroup = document.createElement('div');
   let doneButton = document.createElement('button');
   let deleteButton = document.createElement('button');
 
-  // устанавливаем стили для элемента списка, а также для размещения кнопок
-  // в его правой части с помощью flex
+  // 
+  // 
   item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
   item.textContent = name;
 
@@ -87,16 +87,16 @@ function createTodoItem(name, done, idItem) {
   deleteButton.classList.add('btn', 'btn-danger');
   deleteButton.textContent = 'Удалить';
 
-  // вкладываем кнопки в отдельный элемент, чтобы они объединились в один блок
+  // 
   buttonGroup.append(doneButton);
   buttonGroup.append(deleteButton);
   item.append(buttonGroup);
 
-  // приложению нужен доступ к самому элементу и кнопкам, чтобы обрабатывать события нажатия
+  // 
   return { item, doneButton, deleteButton };
 }
 
-// обработчики на кнопки
+// 
 function pressButtonEvent(todoItem, todoArray, listName) {
 
   todoItem.doneButton.addEventListener('click', function () {
@@ -137,13 +137,13 @@ function pressButtonEvent(todoItem, todoArray, listName) {
   });
 }
 
-async function createTodoApp(container, title = 'Список дел', listName = 'todoMy') {
+async function createTodoApp(container, title = 'To-do list', listName = 'todoMy') {
   let todoAppTitle = createAppTitle(title);
   let todoItemForm = createTodoItemForm();
   let todoList = createTodoList();
   let todoArray = [];
 
-  // сначала считываем существующий список дел в массив дел и создаем dom-элементы списка
+  // 
   if (nameStore == 'loc') {
     todoArray = JSON.parse(localStorage.getItem(listName));
   }
@@ -151,14 +151,14 @@ async function createTodoApp(container, title = 'Список дел', listName 
     todoArray = await getTodoListApi(listName);
   };
 
-  if (todoArray == null) { todoArray = []; } // если localstorage еще не создан, меняем значение массива null на пустой массив
+  if (todoArray == null) { todoArray = []; } // 
   for (let i = 0; i < todoArray.length; i++) {
     let todoItem = createTodoItem(todoArray[i].name, todoArray[i].done, todoArray[i].id);
     pressButtonEvent(todoItem, todoArray, listName);
     todoList.append(todoItem.item);
   }
 
-  // если строка ввода не пустая, делаем кнопку активной, иначе пассивной
+  // 
   todoItemForm.form.addEventListener('input', function () {
     if (todoItemForm.input.value != '') {
       todoItemForm.button.disabled = false;
@@ -172,13 +172,10 @@ async function createTodoApp(container, title = 'Список дел', listName 
   container.append(todoItemForm.form);
   container.append(todoList);
 
-  // браузер создает событие submit на форме по нажатию на enter или на кнопку создания дела
-  todoItemForm.form.addEventListener('submit', async function (e) {
-    // эта строчка необходима, чтобы предотвратить стандартные действия браузера
-    // в данном случае мы не хотим, чтобы страница перезагружалась при отправке формы
+  // 
+  todoItemForm.form.addEventListener('submit', async function (e) { 
     e.preventDefault();
-
-    // игнорируем создание элемента, если пользователь ничего не ввел в поле
+    // 
     if (!todoItemForm.input.value) {
       return;
     }
@@ -186,7 +183,7 @@ async function createTodoApp(container, title = 'Список дел', listName 
     let todoItem = createTodoItem(todoItemForm.input.value, false);
     pressButtonEvent(todoItem, todoArray, listName);
 
-    // уникальный идентификатор дела = (находим максимальный) + 1
+    // 
     let idItem = 0;
     for (let i = 0; i < todoArray.length; i++) {
       idItem = Math.max(idItem, todoArray[i].id);
@@ -206,16 +203,11 @@ async function createTodoApp(container, title = 'Список дел', listName 
     todoItem.item.id = idItem;
     todoArray.push({ id: idItem, name: todoItemForm.input.value, owner: listName, done: false });
 
-
-
-
-
-    // создаем и добавляем в список новое дело с названием из поля для ввода
+    // 
     todoList.append(todoItem.item);
-
-    // обнуляем значение в поле, чтобы не пришлось стирать его вручную
+    // 
     todoItemForm.input.value = '';
-    // делаем кнопку неактивной
+    // 
     todoItemForm.button.disabled = true;
   });
 }
