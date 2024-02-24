@@ -83,9 +83,9 @@ function createTodoItem(name, done, idItem) {
 
   buttonGroup.classList.add('btn-group', 'btn-group-sm');
   doneButton.classList.add('btn', 'btn-success');
-  doneButton.textContent = 'Готово';
+  doneButton.textContent = 'Done';
   deleteButton.classList.add('btn', 'btn-danger');
-  deleteButton.textContent = 'Удалить';
+  deleteButton.textContent = 'Delete';
 
   // 
   buttonGroup.append(doneButton);
