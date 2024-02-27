@@ -41,7 +41,7 @@ function createTodoItemForm() {
 
   form.classList.add('input-group', 'mb-3');
   input.classList.add('form-control');
-  input.placeholder = 'Input the to-do list name';
+  input.placeholder = 'Input a to-do list name';
   buttonWrapper.classList.add('input-group-append');
   button.classList.add('btn', 'btn-primary');
   button.disabled = true;   // before input the button is disabled
